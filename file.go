@@ -6,10 +6,12 @@ import (
 	"strings"
 )
 
+// File contains a node tree structure of a GEDCOM file
 type File struct {
 	Nodes []*Node
 }
 
+// FromFile loads a file into memory and converts it to a File.
 func FromFile(file string) (*File, error) {
 	bytes, err := ioutil.ReadFile(file)
 	if err != nil {
