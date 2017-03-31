@@ -1,6 +1,6 @@
 # gedcom
 
-An implementation of GEDCOM 5.5.1 in Go
+An implementation of GEDCOM 5.5 in Go
 
 ## References
 
