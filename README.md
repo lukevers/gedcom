@@ -1,5 +1,7 @@
 # gedcom
 
+[![GoDoc](https://godoc.org/github.com/lukevers/gedcom?status.svg)](https://godoc.org/github.com/lukevers/gedcom)
+
 An implementation of GEDCOM 5.5 in Go
 
 ## References
