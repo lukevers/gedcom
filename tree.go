@@ -11,8 +11,8 @@ type Tree struct {
 	Nodes []*Node
 }
 
-// FromFile loads a file into memory and parses it to a Tree.
-func FromFile(file string) (*Tree, error) {
+// ParseFromFile loads a file into memory and parses it to a Tree.
+func ParseFromFile(file string) (*Tree, error) {
 	bytes, err := ioutil.ReadFile(file)
 	if err != nil {
 		return nil, err
