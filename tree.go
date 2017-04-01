@@ -6,13 +6,13 @@ import (
 	"strings"
 )
 
-// File contains a node tree structure of a GEDCOM file
-type File struct {
+// Tree contains a node structure of a GEDCOM file
+type Tree struct {
 	Nodes []*Node
 }
 
-// FromFile loads a file into memory and converts it to a File.
-func FromFile(file string) (*File, error) {
+// FromFile loads a file into memory and converts it to a Tree.
+func FromFile(file string) (*Tree, error) {
 	bytes, err := ioutil.ReadFile(file)
 	if err != nil {
 		return nil, err
@@ -22,13 +22,13 @@ func FromFile(file string) (*File, error) {
 	str = strings.Replace(str, "\r\n", "\n", -1)
 	str = strings.TrimSpace(str)
 
-	f := &File{}
-	err = f.parse(strings.Split(str, "\n"))
+	t := &Tree{}
+	err = t.parse(strings.Split(str, "\n"))
 
-	return f, err
+	return t, err
 }
 
-func (f *File) parse(lines []string) error {
+func (t *Tree) parse(lines []string) error {
 	var nodes []*Node
 
 	// Convert every line to a node
@@ -54,7 +54,7 @@ func (f *File) parse(lines []string) error {
 	for index, node := range nodes {
 		// If index is 0 we have a new root element
 		if node.Depth == 0 {
-			f.Nodes = append(f.Nodes, node)
+			t.Nodes = append(t.Nodes, node)
 			root = node
 			continue
 		}
