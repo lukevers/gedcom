@@ -91,18 +91,19 @@ func Parse(lines []string) (*Tree, error) {
 
 func (t *Tree) TraverseFamilies() error {
 	var individuals map[string]*Node = make(map[string]*Node)
-	var families map[string]*Node = make(map[string]*Node)
+	var families []*Node
 
 	for _, node := range t.Nodes {
 		switch node.Data {
 		case "INDI":
 			individuals[node.Attribute] = node
 		case "FAM":
-			families[node.Attribute] = node
+			families = append(families, node)
 		}
 	}
 
 	for _, family := range families {
+
 		f := &Family{}
 
 		for _, node := range family.Children {
