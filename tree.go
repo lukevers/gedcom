@@ -8,7 +8,8 @@ import (
 
 // Tree contains a node structure of a GEDCOM file.
 type Tree struct {
-	Nodes []*Node
+	Nodes    []*Node
+	Families []*Family
 }
 
 // ParseFromFile loads a file into memory and parses it to a Tree.
@@ -86,4 +87,39 @@ func Parse(lines []string) (*Tree, error) {
 	}
 
 	return t, nil
+}
+
+func (t *Tree) TraverseFamilies() error {
+	var individuals map[string]*Node = make(map[string]*Node)
+	var families map[string]*Node = make(map[string]*Node)
+
+	for _, node := range t.Nodes {
+		switch node.Data {
+		case "INDI":
+			individuals[node.Attribute] = node
+		case "FAM":
+			families[node.Attribute] = node
+		}
+	}
+
+	for _, family := range families {
+		f := &Family{}
+
+		for _, node := range family.Children {
+			individual := individuals[node.Data]
+
+			switch node.Attribute {
+			case "HUSB":
+				f.Father = individual
+			case "WIFE":
+				f.Mother = individual
+			case "CHIL":
+				f.Children = append(f.Children, individual)
+			}
+		}
+
+		t.Families = append(t.Families, f)
+	}
+
+	return nil
 }
