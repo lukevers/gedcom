@@ -42,8 +42,8 @@ func Parse(lines []string) (*Tree, error) {
 			return nil, err
 		}
 
-		n.Attribute = parts[1]
-		n.Data = strings.Join(parts[2:], " ")
+		n.Attribute = strings.TrimSpace(parts[1])
+		n.Data = strings.TrimSpace(strings.Join(parts[2:], " "))
 
 		nodes = append(nodes, n)
 	}
