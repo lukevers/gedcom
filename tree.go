@@ -8,8 +8,9 @@ import (
 
 // Tree contains a node structure of a GEDCOM file.
 type Tree struct {
-	Nodes    []*Node
-	Families []*Family
+	Nodes       []*Node
+	Families    []*Family
+	Individuals []*Individual
 }
 
 // ParseFromFile loads a file into memory and parses it to a Tree.
@@ -89,21 +90,25 @@ func Parse(lines []string) (*Tree, error) {
 	return t, nil
 }
 
+// TraverseFamilies loops over all nodes and creates a slice of Families and a
+// slice of Individuals.
 func (t *Tree) TraverseFamilies() error {
-	var individuals map[string]*Node = make(map[string]*Node)
-	var families []*Node
+	individuals := make(map[string]*Individual)
+	fams := make(map[string]*Node)
+	families := make(map[string]*Family)
 
 	for _, node := range t.Nodes {
 		switch node.Data {
 		case "INDI":
-			individuals[node.Attribute] = node
+			individual := &Individual{Node: node}
+			individuals[node.Attribute] = individual
+			t.Individuals = append(t.Individuals, individual)
 		case "FAM":
-			families = append(families, node)
+			fams[node.Attribute] = node
 		}
 	}
 
-	for _, family := range families {
-
+	for id, family := range fams {
 		f := &Family{}
 
 		for _, node := range family.Children {
@@ -119,7 +124,39 @@ func (t *Tree) TraverseFamilies() error {
 			}
 		}
 
+		families[id] = f
 		t.Families = append(t.Families, f)
+	}
+
+	for _, individual := range individuals {
+		fam, err := individual.Node.GetAttribute("FAMC")
+
+		// If there is an error that means that the individual is not a child
+		// of a family and has no parents set and we should move on to the next
+		// individual.
+		if err != nil {
+			continue
+		}
+
+		if f, exists := families[fam]; exists {
+			individual.Father = f.Father
+			individual.Mother = f.Mother
+		}
+	}
+
+	return nil
+}
+
+// FindIndividualByAttribute searches through the slice of Individuals on the
+// Tree and looks for an Individual that's internal Node structure has the
+// attribute provided with the same data provided.
+func (t *Tree) FindIndividualByAttribute(attribute, data string) *Individual {
+	for _, individual := range t.Individuals {
+		if a, err := individual.Node.GetAttribute(attribute); err == nil {
+			if a == data {
+				return individual
+			}
+		}
 	}
 
 	return nil

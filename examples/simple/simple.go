@@ -19,17 +19,27 @@ func main() {
 	for i, family := range tree.Families {
 		log.Printf("===== FAMILY %d =====", i)
 		if family.Father != nil {
-			name, _ := family.Father.GetAttribute("NAME")
+			name, _ := family.Father.Node.GetAttribute("NAME")
 			log.Printf("Father: %s", name)
 		}
 		if family.Mother != nil {
-			name, _ := family.Mother.GetAttribute("NAME")
+			name, _ := family.Mother.Node.GetAttribute("NAME")
 			log.Printf("Mother: %s", name)
 		}
 
 		for j, child := range family.Children {
-			name, _ := child.GetAttribute("NAME")
+			name, _ := child.Node.GetAttribute("NAME")
 			log.Printf("Child %d: %s", j, name)
+
+			if child.Father != nil {
+				name, _ = child.Father.Node.GetAttribute("NAME")
+				log.Printf("Child %d Father: %s", j, name)
+			}
+
+			if child.Mother != nil {
+				name, _ = child.Mother.Node.GetAttribute("NAME")
+				log.Printf("Child %d Mother: %s", j, name)
+			}
 		}
 	}
 }
