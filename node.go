@@ -62,8 +62,8 @@ import (
 //     },
 //   }
 //
-// As you can see, a Node with a Depth of n will only ever have children with a
-// Depth of n+1, and is not limited to any number of children.
+// A Node with a Depth of n will only ever have children with a Depth of n+1,
+// and is not limited to any number of children.
 type Node struct {
 	Depth     int
 	Attribute string
