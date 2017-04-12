@@ -73,16 +73,54 @@ type Node struct {
 	Children []*Node
 }
 
-// GetAttribute traverses the children Nodes for an Attribute and returns the
-// Data attached to the Attribute. If there is no children Node that contains
-// the Attribute searched for, an error will be returned with an empty string
-// instead of any Data.
-func (n *Node) GetAttribute(attribute string) (string, error) {
+// GetChildNodeByAttribute traverses the children Nodes for an Attribute and
+// returns the Node that the Attribute is found on.
+func (n *Node) GetChildNodeByAttribute(attribute string) (*Node, error) {
 	for _, child := range n.Children {
 		if child.Attribute == attribute {
-			return child.Data, nil
+			return child, nil
 		}
 	}
 
-	return "", errors.New("Could not find attribute on node")
+	return nil, errors.New("Could not find attribute on node")
+}
+
+// GetDataByAttributes traverses the children Nodes over a list of multiple (or
+// one) attribute(s). If there is no structure of child Nodes that has the
+// structure requested, an empty string and an error will be returned.
+//
+// The following examples assume that the individual record with the depth of 0
+// is the current Node.
+//
+// A simple example is when we need to get the name of an individual:
+//
+//   0 @I1@ INDI
+//   1 NAME John
+//
+//   name, err := GetDataByAttributes("NAME")
+//   if err != nil {
+//     // The Node "NAME" was not found
+//   }
+//
+// Or a more complex example would be when you need to get the birth date of an
+// individual:
+//
+//   0 @I1@ INDI
+//   1 BIRT
+//   2 DATE 15 Jun 1990
+//
+//   birthday, err := GetDataByAttributes("BIRT", "DATE")
+//   if err != nil {
+//     // Either the Node "BIRT" or "DATE" was not found
+//   }
+func (n *Node) GetDataByAttributes(attributes ...string) (string, error) {
+	var err error
+	for _, attribute := range attributes {
+		n, err = n.GetChildNodeByAttribute(attribute)
+		if err != nil {
+			return "", err
+		}
+	}
+
+	return n.Data, nil
 }

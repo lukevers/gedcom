@@ -129,7 +129,7 @@ func (t *Tree) TraverseFamilies() error {
 	}
 
 	for _, individual := range individuals {
-		fam, err := individual.Node.GetAttribute("FAMC")
+		fam, err := individual.Node.GetDataByAttributes("FAMC")
 
 		// If there is an error that means that the individual is not a child
 		// of a family and has no parents set and we should move on to the next
@@ -159,7 +159,7 @@ func (t *Tree) TraverseFamilies() error {
 // attribute provided with the same data provided.
 func (t *Tree) FindIndividualByAttribute(attribute, data string) *Individual {
 	for _, individual := range t.Individuals {
-		if a, err := individual.Node.GetAttribute(attribute); err == nil {
+		if a, err := individual.Node.GetDataByAttributes(attribute); err == nil {
 			if a == data {
 				return individual
 			}
