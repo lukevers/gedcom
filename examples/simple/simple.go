@@ -19,26 +19,29 @@ func main() {
 	for i, family := range tree.Families {
 		log.Printf("===== FAMILY %d =====", i)
 		if family.Father != nil {
-			name, _ := family.Father.Node.GetAttribute("NAME")
-			log.Printf("Father: %s", name)
+			log.Printf("Father: %s", family.Father.GetName())
+
+			for j, child := range family.Father.Children {
+				log.Printf("Child %d of Father: %s", j, child.GetName())
+			}
 		}
 		if family.Mother != nil {
-			name, _ := family.Mother.Node.GetAttribute("NAME")
-			log.Printf("Mother: %s", name)
+			log.Printf("Mother: %s", family.Mother.GetName())
+
+			for j, child := range family.Mother.Children {
+				log.Printf("Child %d of Mother: %s", j, child.GetName())
+			}
 		}
 
 		for j, child := range family.Children {
-			name, _ := child.Node.GetAttribute("NAME")
-			log.Printf("Child %d: %s", j, name)
+			log.Printf("Child %d: %s", j, child.GetName())
 
 			if child.Father != nil {
-				name, _ = child.Father.Node.GetAttribute("NAME")
-				log.Printf("Child %d Father: %s", j, name)
+				log.Printf("Child %d Father: %s", j, child.Father.GetName())
 			}
 
 			if child.Mother != nil {
-				name, _ = child.Mother.Node.GetAttribute("NAME")
-				log.Printf("Child %d Mother: %s", j, name)
+				log.Printf("Child %d Mother: %s", j, child.Mother.GetName())
 			}
 		}
 	}

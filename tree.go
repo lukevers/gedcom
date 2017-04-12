@@ -139,8 +139,15 @@ func (t *Tree) TraverseFamilies() error {
 		}
 
 		if f, exists := families[fam]; exists {
-			individual.Father = f.Father
-			individual.Mother = f.Mother
+			if f.Father != nil {
+				individual.Father = f.Father
+				f.Father.Children = append(f.Father.Children, individual)
+			}
+
+			if f.Mother != nil {
+				individual.Mother = f.Mother
+				f.Mother.Children = append(f.Mother.Children, individual)
+			}
 		}
 	}
 

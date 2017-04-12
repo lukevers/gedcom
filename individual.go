@@ -3,9 +3,10 @@ package gedcom
 // Individual represents an individual record in a node structure with links to
 // other individuals.
 type Individual struct {
-	Node   *Node
-	Father *Individual
-	Mother *Individual
+	Node     *Node
+	Father   *Individual
+	Mother   *Individual
+	Children []*Individual
 }
 
 // GetName returns the name of the individual. If there is no name attached to
