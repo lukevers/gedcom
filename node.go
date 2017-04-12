@@ -97,6 +97,8 @@ func (n *Node) GetChildNodeByAttribute(attribute string) (*Node, error) {
 //   0 @I1@ INDI
 //   1 NAME John
 //
+// Example:
+//
 //   name, err := GetDataByAttributes("NAME")
 //   if err != nil {
 //     // The Node "NAME" was not found
@@ -108,6 +110,8 @@ func (n *Node) GetChildNodeByAttribute(attribute string) (*Node, error) {
 //   0 @I1@ INDI
 //   1 BIRT
 //   2 DATE 15 Jun 1990
+//
+// Example:
 //
 //   birthday, err := GetDataByAttributes("BIRT", "DATE")
 //   if err != nil {
